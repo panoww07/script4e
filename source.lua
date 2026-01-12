@@ -1303,63 +1303,65 @@ PrincessAnim_Button.TextColor3 = Color3.fromRGB(0, 0, 0)
 PrincessAnim_Button.TextScaled = true
 PrincessAnim_Button.TextSize = 14.000
 PrincessAnim_Button.TextWrapped = true
--- Adidas Community Animation Pack (MANUAL IDS REQUIRED)
--- Replace the Id numbers with the real animation asset IDs
-
+-- Single Button for All Adidas Community Pack Animations
 local Players = game:GetService("Players")
 local player = Players.LocalPlayer
 
 local AdidasAnimations = {
-    {Name = "Adidas Wave", Id = 0000000001},
-    {Name = "Adidas Spin", Id = 0000000002},
-    {Name = "Adidas Bounce", Id = 0000000003},
-    {Name = "Adidas Groove", Id = 0000000004},
-    {Name = "Adidas Victory", Id = 0000000005},
+    {Name = "Jump", Id = 115715495289805},
+    {Name = "Swim", Id = 106537993816942},
+    {Name = "Run", Id = 124765145869332},
+    {Name = "Climb", Id = 123695349157584},
+    {Name = "Fall", Id = 93993406355955},
 }
 
-local startY = 215 -- below Levitation
-local spacing = 40
+-- Create one button
+local AdidasPack_Button = Instance.new("TextButton")
+AdidasPack_Button.Name = "AdidasPack_Button"
+AdidasPack_Button.Parent = Animations_Section
+AdidasPack_Button.BackgroundColor3 = Color3.fromRGB(180, 30, 130)
+AdidasPack_Button.BackgroundTransparency = 0.500
+AdidasPack_Button.BorderSizePixel = 0
+AdidasPack_Button.Position = UDim2.new(0,25,0,215) -- adjust Y-pos under your other buttons
+AdidasPack_Button.Size = UDim2.new(0,150,0,30)
+AdidasPack_Button.Font = Enum.Font.Oswald
+AdidasPack_Button.Text = "Adidas Pack"
+AdidasPack_Button.TextColor3 = Color3.fromRGB(0,0,0)
+AdidasPack_Button.TextScaled = true
+AdidasPack_Button.TextWrapped = true
 
-for i, animData in ipairs(AdidasAnimations) do
-    local Button = Instance.new("TextButton")
-    local Anim = Instance.new("Animation")
-
-    Button.Name = animData.Name .. "_Button"
-    Button.Parent = Animations_Section
-    Button.BackgroundColor3 = Color3.fromRGB(180, 30, 130)
-    Button.BackgroundTransparency = 0.500
-    Button.BorderColor3 = Color3.fromRGB(0, 0, 0)
-    Button.BorderSizePixel = 0
-    Button.Position = UDim2.new(0, 25, 0, startY + (i - 1) * spacing)
-    Button.Size = UDim2.new(0, 150, 0, 30)
-    Button.Font = Enum.Font.Oswald
-    Button.Text = animData.Name
-    Button.TextColor3 = Color3.fromRGB(0, 0, 0)
-    Button.TextScaled = true
-    Button.TextSize = 14.000
-    Button.TextWrapped = true
-
-    Anim.AnimationId = "rbxassetid://" .. animData.Id
-
-    Button.MouseButton1Click:Connect(function()
-        local character = player.Character or player.CharacterAdded:Wait()
-        local humanoid = character:WaitForChild("Humanoid")
-
-        local animator = humanoid:FindFirstChildOfClass("Animator")
-        if not animator then
-            animator = Instance.new("Animator")
-            animator.Parent = humanoid
-        end
-
-        -- Stop previous animations
-        for _, track in pairs(animator:GetPlayingAnimationTracks()) do
-            track:Stop()
-        end
-
-        local track = animator:LoadAnimation(Anim)
-        track:Play()
-    end)
+-- Preload animation objects
+local animationObjects = {}
+for _, animData in ipairs(AdidasAnimations) do
+    local a = Instance.new("Animation")
+    a.AnimationId = "rbxassetid://" .. animData.Id
+    animationObjects[#animationObjects + 1] = a
 end
+
+-- Play animations in sequence
+AdidasPack_Button.MouseButton1Click:Connect(function()
+    local character = player.Character or player.CharacterAdded:Wait()
+    local humanoid = character:WaitForChild("Humanoid")
+    local animator = humanoid:FindFirstChildOfClass("Animator")
+    if not animator then
+        animator = Instance.new("Animator", humanoid)
+    end
+
+    -- Stop any current animations
+    for _, t in pairs(animator:GetPlayingAnimationTracks()) do
+        t:Stop()
+    end
+
+    -- Play one after another
+    spawn(function()
+        for _, animObj in ipairs(animationObjects) do
+            local track = animator:LoadAnimation(animObj)
+            track:Play()
+            track.Stopped:Wait()
+        end
+    end)
+end)
+
 
 
 CowboyAnim_Button.Name = "CowboyAnim_Button"
