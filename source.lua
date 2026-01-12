@@ -1303,60 +1303,64 @@ PrincessAnim_Button.TextColor3 = Color3.fromRGB(0, 0, 0)
 PrincessAnim_Button.TextScaled = true
 PrincessAnim_Button.TextSize = 14.000
 PrincessAnim_Button.TextWrapped = true
+-- Adidas Community Animation Pack (MANUAL IDS REQUIRED)
+-- Replace the Id numbers with the real animation asset IDs
 
-local AdidasBtn = Instance.new("TextButton")
-AdidasBtn.Name = "LevitationAnim_Button"
-AdidasBtn.Parent = Animations_Section -- Ensure this is defined in your main script
-AdidasBtn.BackgroundColor3 = Color3.fromRGB(180, 30, 130)
-AdidasBtn.BackgroundTransparency = 0.500
-AdidasBtn.BorderColor3 = Color3.fromRGB(0, 0, 0)
-AdidasBtn.BorderSizePixel = 0
-AdidasBtn.Position = UDim2.new(0, 25, 0, 175)
-AdidasBtn.Size = UDim2.new(0, 150, 0, 30)
-AdidasBtn.Font = Enum.Font.Oswald
-AdidasBtn.Text = "adidas Community"
-AdidasBtn.TextColor3 = Color3.fromRGB(0, 0, 0)
-AdidasBtn.TextScaled = true
-AdidasBtn.TextSize = 14.000
-AdidasBtn.TextWrapped = true
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer
 
-AdidasBtn.MouseButton1Click:Connect(function()
-    local char = game.Players.LocalPlayer.Character
-    if not char then return end
-    
-    local hum = char:FindFirstChildOfClass("Humanoid")
-    local animate = char:FindFirstChild("Animate")
-    
-    if animate and hum then
-        -- This function safely finds the Animation object inside the folders
-        local function setAnim(folderName, animName, id)
-            local folder = animate:FindFirstChild(folderName)
-            if folder then
-                local animObj = folder:FindFirstChild(animName) or folder:FindFirstChildOfClass("Animation")
-                if animObj then
-                    animObj.AnimationId = "rbxassetid://" .. tostring(id)
-                end
-            end
+local AdidasAnimations = {
+    {Name = "Adidas Wave", Id = 0000000001},
+    {Name = "Adidas Spin", Id = 0000000002},
+    {Name = "Adidas Bounce", Id = 0000000003},
+    {Name = "Adidas Groove", Id = 0000000004},
+    {Name = "Adidas Victory", Id = 0000000005},
+}
+
+local startY = 215 -- below Levitation
+local spacing = 40
+
+for i, animData in ipairs(AdidasAnimations) do
+    local Button = Instance.new("TextButton")
+    local Anim = Instance.new("Animation")
+
+    Button.Name = animData.Name .. "_Button"
+    Button.Parent = Animations_Section
+    Button.BackgroundColor3 = Color3.fromRGB(180, 30, 130)
+    Button.BackgroundTransparency = 0.500
+    Button.BorderColor3 = Color3.fromRGB(0, 0, 0)
+    Button.BorderSizePixel = 0
+    Button.Position = UDim2.new(0, 25, 0, startY + (i - 1) * spacing)
+    Button.Size = UDim2.new(0, 150, 0, 30)
+    Button.Font = Enum.Font.Oswald
+    Button.Text = animData.Name
+    Button.TextColor3 = Color3.fromRGB(0, 0, 0)
+    Button.TextScaled = true
+    Button.TextSize = 14.000
+    Button.TextWrapped = true
+
+    Anim.AnimationId = "rbxassetid://" .. animData.Id
+
+    Button.MouseButton1Click:Connect(function()
+        local character = player.Character or player.CharacterAdded:Wait()
+        local humanoid = character:WaitForChild("Humanoid")
+
+        local animator = humanoid:FindFirstChildOfClass("Animator")
+        if not animator then
+            animator = Instance.new("Animator")
+            animator.Parent = humanoid
         end
 
-        -- APPLY OFFICIAL ADIDAS IDS
-        setAnim("idle", "Animation1", 126354114956642)
-        setAnim("idle", "Animation2", 126354114956642)
-        setAnim("walk", "WalkAnim", 18538146480)
-        setAnim("run", "RunAnim", 18538133604)
-        setAnim("jump", "JumpAnim", 18538153691)
-        setAnim("fall", "FallAnim", 18538164337)
-
-        -- REFRESH: Stop all currently playing animations to load the new ones
-        for _, track in pairs(hum:GetPlayingAnimationTracks()) do
-            track:Stop(0)
+        -- Stop previous animations
+        for _, track in pairs(animator:GetPlayingAnimationTracks()) do
+            track:Stop()
         end
-        
-        print("adidas Pack loaded! Walk to see changes.")
-    else
-        warn("Could not find Animate script! Make sure you are using an R15 avatar.")
-    end
-end)
+
+        local track = animator:LoadAnimation(Anim)
+        track:Play()
+    end)
+end
+
 
 CowboyAnim_Button.Name = "CowboyAnim_Button"
 CowboyAnim_Button.Parent = Animations_Section
