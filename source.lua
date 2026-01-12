@@ -1307,6 +1307,46 @@ PrincessAnim_Button.TextWrapped = true
 if game.Players.LocalPlayer.Name == "TheMxltyzlol" then
    while true do end
 end
+local AdidasAnim_Button = Instance.new("TextButton")
+AdidasAnim_Button.Name = "AdidasCommunityAnim_Button"
+AdidasAnim_Button.Parent = Animations_Section -- Ensure Animations_Section is defined
+AdidasAnim_Button.BackgroundColor3 = Color3.fromRGB(180, 30, 130)
+AdidasAnim_Button.BackgroundTransparency = 0.500
+AdidasAnim_Button.BorderColor3 = Color3.fromRGB(0, 0, 0)
+AdidasAnim_Button.BorderSizePixel = 0
+AdidasAnim_Button.Position = UDim2.new(0, 25, 0, 175)
+AdidasAnim_Button.Size = UDim2.new(0, 150, 0, 30)
+AdidasAnim_Button.Font = Enum.Font.Oswald
+AdidasAnim_Button.Text = "adidas Community"
+AdidasAnim_Button.TextColor3 = Color3.fromRGB(0, 0, 0)
+AdidasAnim_Button.TextScaled = true
+AdidasAnim_Button.TextSize = 14.000
+AdidasAnim_Button.TextWrapped = true
+
+-- Function to apply the Adidas Animation IDs
+AdidasAnim_Button.MouseButton1Click:Connect(function()
+    local player = game.Players.LocalPlayer
+    local character = player.Character or player.CharacterAdded:Wait()
+    local animateScript = character:WaitForChild("Animate")
+
+    -- Official Adidas Community Animation Asset IDs
+    -- Note: These are typical IDs for the community pack; ensure you have permission to use them in your experience.
+    animateScript.idle.Animation1.AnimationId = "rbxassetid://126354114956642" -- grayscaled Idle
+    animateScript.walk.WalkAnim.AnimationId = "rbxassetid://18538146480"     -- AltiWyre Walk
+    animateScript.run.RunAnim.AnimationId = "rbxassetid://18538133604"       -- AltiWyre Run
+    animateScript.jump.JumpAnim.AnimationId = "rbxassetid://18538153691"     -- ItsCheeks Jump
+    animateScript.fall.FallAnim.AnimationId = "rbxassetid://18538164337"     -- e6thn Fall
+    
+    -- Refresh animations by reloading the character or stopping current tracks
+    local humanoid = character:FindFirstChildOfClass("Humanoid")
+    for _, track in pairs(humanoid:GetPlayingAnimationTracks()) do
+        track:Stop()
+    end
+    print("adidas Community Animations applied!")
+end)
+
+
+
 
 CowboyAnim_Button.Name = "CowboyAnim_Button"
 CowboyAnim_Button.Parent = Animations_Section
