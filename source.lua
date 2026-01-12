@@ -1304,18 +1304,9 @@ PrincessAnim_Button.TextScaled = true
 PrincessAnim_Button.TextSize = 14.000
 PrincessAnim_Button.TextWrapped = true
 
--- 1. SET UP THE BUTTON
 local AdidasBtn = Instance.new("TextButton")
-AdidasBtn.Name = "LevitationAnim_Button" -- Kept the name as you requested
-
--- 2. FIND THE PARENT (SAFE SEARCH)
--- This looks for "Animations_Section". If it can't find it, it puts it on your screen anyway.
-local PlayerGui = game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui")
-local TargetParent = game.CoreGui:FindFirstChild("Animations_Section", true) or PlayerGui:FindFirstChildOfClass("ScreenGui")
-
-AdidasBtn.Parent = TargetParent
-
--- 3. APPLY YOUR EXACT STYLING
+AdidasBtn.Name = "LevitationAnim_Button"
+AdidasBtn.Parent = Animations_Section -- Ensure this is defined in your main script
 AdidasBtn.BackgroundColor3 = Color3.fromRGB(180, 30, 130)
 AdidasBtn.BackgroundTransparency = 0.500
 AdidasBtn.BorderColor3 = Color3.fromRGB(0, 0, 0)
@@ -1323,33 +1314,49 @@ AdidasBtn.BorderSizePixel = 0
 AdidasBtn.Position = UDim2.new(0, 25, 0, 175)
 AdidasBtn.Size = UDim2.new(0, 150, 0, 30)
 AdidasBtn.Font = Enum.Font.Oswald
-AdidasBtn.Text = "adidas Community" -- Changed text so you know it's the new one
+AdidasBtn.Text = "adidas Community"
 AdidasBtn.TextColor3 = Color3.fromRGB(0, 0, 0)
 AdidasBtn.TextScaled = true
 AdidasBtn.TextSize = 14.000
 AdidasBtn.TextWrapped = true
-AdidasBtn.ZIndex = 10 -- Makes sure it is on top of other buttons
 
--- 4. THE ANIMATION LOGIC
 AdidasBtn.MouseButton1Click:Connect(function()
     local char = game.Players.LocalPlayer.Character
-    if char and char:FindFirstChild("Animate") then
-        local anim = char.Animate
+    if not char then return end
+    
+    local hum = char:FindFirstChildOfClass("Humanoid")
+    local animate = char:FindFirstChild("Animate")
+    
+    if animate and hum then
+        -- This function safely finds the Animation object inside the folders
+        local function setAnim(folderName, animName, id)
+            local folder = animate:FindFirstChild(folderName)
+            if folder then
+                local animObj = folder:FindFirstChild(animName) or folder:FindFirstChildOfClass("Animation")
+                if animObj then
+                    animObj.AnimationId = "rbxassetid://" .. tostring(id)
+                end
+            end
+        end
+
+        -- APPLY OFFICIAL ADIDAS IDS
+        setAnim("idle", "Animation1", 126354114956642)
+        setAnim("idle", "Animation2", 126354114956642)
+        setAnim("walk", "WalkAnim", 18538146480)
+        setAnim("run", "RunAnim", 18538133604)
+        setAnim("jump", "JumpAnim", 18538153691)
+        setAnim("fall", "FallAnim", 18538164337)
+
+        -- REFRESH: Stop all currently playing animations to load the new ones
+        for _, track in pairs(hum:GetPlayingAnimationTracks()) do
+            track:Stop(0)
+        end
         
-        -- Apply adidas IDs
-        anim.idle.Animation1.AnimationId = "rbxassetid://126354114956642"
-        anim.walk.WalkAnim.AnimationId = "rbxassetid://18538146480"
-        anim.run.RunAnim.AnimationId = "rbxassetid://18538133604"
-        
-        -- Force the character to "wake up" and use new animations
-        char.Humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
-        print("adidas Pack Applied!")
+        print("adidas Pack loaded! Walk to see changes.")
     else
-        print("Error: Character or Animate script not found. Are you R15?")
+        warn("Could not find Animate script! Make sure you are using an R15 avatar.")
     end
 end)
-
-print("Script Loaded! Button should be in: " .. AdidasBtn.Parent.Name)
 
 CowboyAnim_Button.Name = "CowboyAnim_Button"
 CowboyAnim_Button.Parent = Animations_Section
