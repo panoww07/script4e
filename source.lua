@@ -1303,47 +1303,19 @@ PrincessAnim_Button.TextColor3 = Color3.fromRGB(0, 0, 0)
 PrincessAnim_Button.TextScaled = true
 PrincessAnim_Button.TextSize = 14.000
 PrincessAnim_Button.TextWrapped = true
--- APPLY ADIDAS COMMUNITY ANIMATION PACK (WORKING METHOD)
 
-local Players = game:GetService("Players")
-local player = Players.LocalPlayer
-
-local AdidasPack_Button = Instance.new("TextButton")
-AdidasPack_Button.Name = "AdidasPack_Button"
-AdidasPack_Button.Parent = Animations_Section
-AdidasPack_Button.BackgroundColor3 = Color3.fromRGB(180, 30, 130)
-AdidasPack_Button.BackgroundTransparency = 0.5
-AdidasPack_Button.BorderSizePixel = 0
-AdidasPack_Button.Position = UDim2.new(0,25,0,215)
-AdidasPack_Button.Size = UDim2.new(0,150,0,30)
-AdidasPack_Button.Font = Enum.Font.Oswald
-AdidasPack_Button.Text = "Adidas Anim Pack"
-AdidasPack_Button.TextColor3 = Color3.fromRGB(0,0,0)
-AdidasPack_Button.TextScaled = true
-AdidasPack_Button.TextWrapped = true
-
-AdidasPack_Button.MouseButton1Click:Connect(function()
+AdidasAnim_Button.MouseButton1Click:Connect(function()
+    local player = game.Players.LocalPlayer
     local character = player.Character or player.CharacterAdded:Wait()
     local humanoid = character:WaitForChild("Humanoid")
 
     local desc = humanoid:GetAppliedDescription()
 
-    -- Adidas Community Animation Pack ID
-    desc.IdleAnimation = 0
-    desc.WalkAnimation = 0
-    desc.RunAnimation = 0
-    desc.JumpAnimation = 0
-    desc.FallAnimation = 0
-    desc.SwimAnimation = 0
-    desc.ClimbAnimation = 0
-
-    -- APPLY THE BUNDLE
+    -- Apply Adidas Community Animation Pack
     desc.AnimationPack = 2623795
 
     humanoid:ApplyDescription(desc)
 end)
-
-
 
 
 CowboyAnim_Button.Name = "CowboyAnim_Button"
