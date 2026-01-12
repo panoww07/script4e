@@ -1303,64 +1303,46 @@ PrincessAnim_Button.TextColor3 = Color3.fromRGB(0, 0, 0)
 PrincessAnim_Button.TextScaled = true
 PrincessAnim_Button.TextSize = 14.000
 PrincessAnim_Button.TextWrapped = true
--- Single Button for All Adidas Community Pack Animations
+-- APPLY ADIDAS COMMUNITY ANIMATION PACK (WORKING METHOD)
+
 local Players = game:GetService("Players")
 local player = Players.LocalPlayer
 
-local AdidasAnimations = {
-    {Name = "Jump", Id = 115715495289805},
-    {Name = "Swim", Id = 106537993816942},
-    {Name = "Run", Id = 124765145869332},
-    {Name = "Climb", Id = 123695349157584},
-    {Name = "Fall", Id = 93993406355955},
-}
-
--- Create one button
 local AdidasPack_Button = Instance.new("TextButton")
 AdidasPack_Button.Name = "AdidasPack_Button"
 AdidasPack_Button.Parent = Animations_Section
 AdidasPack_Button.BackgroundColor3 = Color3.fromRGB(180, 30, 130)
-AdidasPack_Button.BackgroundTransparency = 0.500
+AdidasPack_Button.BackgroundTransparency = 0.5
 AdidasPack_Button.BorderSizePixel = 0
-AdidasPack_Button.Position = UDim2.new(0,25,0,215) -- adjust Y-pos under your other buttons
+AdidasPack_Button.Position = UDim2.new(0,25,0,215)
 AdidasPack_Button.Size = UDim2.new(0,150,0,30)
 AdidasPack_Button.Font = Enum.Font.Oswald
-AdidasPack_Button.Text = "Adidas Pack"
+AdidasPack_Button.Text = "Adidas Anim Pack"
 AdidasPack_Button.TextColor3 = Color3.fromRGB(0,0,0)
 AdidasPack_Button.TextScaled = true
 AdidasPack_Button.TextWrapped = true
 
--- Preload animation objects
-local animationObjects = {}
-for _, animData in ipairs(AdidasAnimations) do
-    local a = Instance.new("Animation")
-    a.AnimationId = "rbxassetid://" .. animData.Id
-    animationObjects[#animationObjects + 1] = a
-end
-
--- Play animations in sequence
 AdidasPack_Button.MouseButton1Click:Connect(function()
     local character = player.Character or player.CharacterAdded:Wait()
     local humanoid = character:WaitForChild("Humanoid")
-    local animator = humanoid:FindFirstChildOfClass("Animator")
-    if not animator then
-        animator = Instance.new("Animator", humanoid)
-    end
 
-    -- Stop any current animations
-    for _, t in pairs(animator:GetPlayingAnimationTracks()) do
-        t:Stop()
-    end
+    local desc = humanoid:GetAppliedDescription()
 
-    -- Play one after another
-    spawn(function()
-        for _, animObj in ipairs(animationObjects) do
-            local track = animator:LoadAnimation(animObj)
-            track:Play()
-            track.Stopped:Wait()
-        end
-    end)
+    -- Adidas Community Animation Pack ID
+    desc.IdleAnimation = 0
+    desc.WalkAnimation = 0
+    desc.RunAnimation = 0
+    desc.JumpAnimation = 0
+    desc.FallAnimation = 0
+    desc.SwimAnimation = 0
+    desc.ClimbAnimation = 0
+
+    -- APPLY THE BUNDLE
+    desc.AnimationPack = 2623795
+
+    humanoid:ApplyDescription(desc)
 end)
+
 
 
 
