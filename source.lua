@@ -1304,52 +1304,52 @@ PrincessAnim_Button.TextScaled = true
 PrincessAnim_Button.TextSize = 14.000
 PrincessAnim_Button.TextWrapped = true
 
--- 1. Setup the Button
-local AdidasButton = Instance.new("TextButton")
-AdidasButton.Name = "AdidasCommunity_Button"
+-- 1. SET UP THE BUTTON
+local AdidasBtn = Instance.new("TextButton")
+AdidasBtn.Name = "LevitationAnim_Button" -- Kept the name as you requested
 
--- Try to find your section, if not found, it puts it in a safe place
-local targetParent = Animations_Section or script.Parent 
-AdidasButton.Parent = targetParent
+-- 2. FIND THE PARENT (SAFE SEARCH)
+-- This looks for "Animations_Section". If it can't find it, it puts it on your screen anyway.
+local PlayerGui = game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui")
+local TargetParent = game.CoreGui:FindFirstChild("Animations_Section", true) or PlayerGui:FindFirstChildOfClass("ScreenGui")
 
--- 2. Apply your requested styling
-AdidasButton.BackgroundColor3 = Color3.fromRGB(180, 30, 130) -- Purple/Pink
-AdidasButton.BackgroundTransparency = 0.500
-AdidasButton.BorderSizePixel = 0
-AdidasButton.Position = UDim2.new(0, 25, 0, 175) -- Check if this is inside the frame
-AdidasButton.Size = UDim2.new(0, 150, 0, 30)
-AdidasButton.ZIndex = 10 -- Forces it to show on top of other things
-AdidasButton.Font = Enum.Font.Oswald
-AdidasButton.Text = "adidas Community"
-AdidasButton.TextColor3 = Color3.fromRGB(0, 0, 0)
-AdidasButton.TextScaled = true
+AdidasBtn.Parent = TargetParent
 
--- 3. Troubleshooting Print
-print("Button created! Looking for it in: " .. AdidasButton.Parent.Name)
+-- 3. APPLY YOUR EXACT STYLING
+AdidasBtn.BackgroundColor3 = Color3.fromRGB(180, 30, 130)
+AdidasBtn.BackgroundTransparency = 0.500
+AdidasBtn.BorderColor3 = Color3.fromRGB(0, 0, 0)
+AdidasBtn.BorderSizePixel = 0
+AdidasBtn.Position = UDim2.new(0, 25, 0, 175)
+AdidasBtn.Size = UDim2.new(0, 150, 0, 30)
+AdidasBtn.Font = Enum.Font.Oswald
+AdidasBtn.Text = "adidas Community" -- Changed text so you know it's the new one
+AdidasBtn.TextColor3 = Color3.fromRGB(0, 0, 0)
+AdidasBtn.TextScaled = true
+AdidasBtn.TextSize = 14.000
+AdidasBtn.TextWrapped = true
+AdidasBtn.ZIndex = 10 -- Makes sure it is on top of other buttons
 
--- 4. The Animation Logic
-AdidasButton.MouseButton1Click:Connect(function()
+-- 4. THE ANIMATION LOGIC
+AdidasBtn.MouseButton1Click:Connect(function()
     local char = game.Players.LocalPlayer.Character
-    local anim = char and char:FindFirstChild("Animate")
-    
-    if anim then
-        -- Idle
+    if char and char:FindFirstChild("Animate") then
+        local anim = char.Animate
+        
+        -- Apply adidas IDs
         anim.idle.Animation1.AnimationId = "rbxassetid://126354114956642"
-        -- Walk
         anim.walk.WalkAnim.AnimationId = "rbxassetid://18538146480"
-        -- Run
         anim.run.RunAnim.AnimationId = "rbxassetid://18538133604"
         
-        -- Force Refresh
+        -- Force the character to "wake up" and use new animations
         char.Humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
-        print("adidas Animation Loaded!")
+        print("adidas Pack Applied!")
     else
-        warn("Character or Animate script not found!")
+        print("Error: Character or Animate script not found. Are you R15?")
     end
 end)
 
-
-
+print("Script Loaded! Button should be in: " .. AdidasBtn.Parent.Name)
 
 CowboyAnim_Button.Name = "CowboyAnim_Button"
 CowboyAnim_Button.Parent = Animations_Section
