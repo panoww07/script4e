@@ -1304,17 +1304,31 @@ PrincessAnim_Button.TextScaled = true
 PrincessAnim_Button.TextSize = 14.000
 PrincessAnim_Button.TextWrapped = true
 
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer
+
+local AdidasAnim_Button = Instance.new("TextButton")
+AdidasAnim_Button.Name = "AdidasAnim_Button"
+AdidasAnim_Button.Parent = Animations_Section
+AdidasAnim_Button.BackgroundColor3 = Color3.fromRGB(180, 30, 130)
+AdidasAnim_Button.BackgroundTransparency = 0.5
+AdidasAnim_Button.BorderSizePixel = 0
+AdidasAnim_Button.Position = UDim2.new(0, 25, 0, 215)
+AdidasAnim_Button.Size = UDim2.new(0, 150, 0, 30)
+AdidasAnim_Button.Font = Enum.Font.Oswald
+AdidasAnim_Button.Text = "Adidas Pack"
+AdidasAnim_Button.TextColor3 = Color3.fromRGB(0, 0, 0)
+AdidasAnim_Button.TextScaled = true
+AdidasAnim_Button.TextWrapped = true
+
 AdidasAnim_Button.MouseButton1Click:Connect(function()
-    local player = game.Players.LocalPlayer
-    local character = player.Character or player.CharacterAdded:Wait()
-    local humanoid = character:WaitForChild("Humanoid")
+    local char = player.Character or player.CharacterAdded:Wait()
+    local hum = char:WaitForChild("Humanoid")
 
-    local desc = humanoid:GetAppliedDescription()
+    local desc = hum:GetAppliedDescription()
+    desc.AnimationPack = 2623795 -- Adidas Community Pack
 
-    -- Apply Adidas Community Animation Pack
-    desc.AnimationPack = 2623795
-
-    humanoid:ApplyDescription(desc)
+    hum:ApplyDescription(desc)
 end)
 
 
@@ -3462,3 +3476,80 @@ game:GetService("UserInputService").InputBegan:Connect(function(input,gameProces
 end)
 wait(.3)
 SendNotify("Hello", tostring(game.Players.LocalPlayer.Name))
+
+local ResetAnim_Button = Instance.new("TextButton")
+ResetAnim_Button.Name = "ResetAnim_Button"
+ResetAnim_Button.Parent = Animations_Section
+ResetAnim_Button.BackgroundColor3 = Color3.fromRGB(120, 120, 120)
+ResetAnim_Button.BackgroundTransparency = 0.5
+ResetAnim_Button.BorderSizePixel = 0
+ResetAnim_Button.Position = UDim2.new(0, 210, 0, 215)
+ResetAnim_Button.Size = UDim2.new(0, 150, 0, 30)
+ResetAnim_Button.Font = Enum.Font.Oswald
+ResetAnim_Button.Text = "Reset Animations"
+ResetAnim_Button.TextColor3 = Color3.fromRGB(0, 0, 0)
+ResetAnim_Button.TextScaled = true
+ResetAnim_Button.TextWrapped = true
+
+ResetAnim_Button.MouseButton1Click:Connect(function()
+    local char = player.Character or player.CharacterAdded:Wait()
+    local hum = char:WaitForChild("Humanoid")
+
+    local desc = hum:GetAppliedDescription()
+    desc.AnimationPack = 0 -- Default Roblox animations
+
+    hum:ApplyDescription(desc)
+end)
+
+local ToggleAnim_Button = Instance.new("TextButton")
+ToggleAnim_Button.Name = "ToggleAnim_Button"
+ToggleAnim_Button.Parent = Animations_Section
+ToggleAnim_Button.BackgroundColor3 = Color3.fromRGB(90, 150, 180)
+ToggleAnim_Button.BackgroundTransparency = 0.5
+ToggleAnim_Button.BorderSizePixel = 0
+ToggleAnim_Button.Position = UDim2.new(0, 25, 0, 255)
+ToggleAnim_Button.Size = UDim2.new(0, 150, 0, 30)
+ToggleAnim_Button.Font = Enum.Font.Oswald
+ToggleAnim_Button.Text = "Toggle Adidas"
+ToggleAnim_Button.TextColor3 = Color3.fromRGB(0, 0, 0)
+ToggleAnim_Button.TextScaled = true
+ToggleAnim_Button.TextWrapped = true
+
+ToggleAnim_Button.MouseButton1Click:Connect(function()
+    local char = player.Character or player.CharacterAdded:Wait()
+    local hum = char:WaitForChild("Humanoid")
+    local desc = hum:GetAppliedDescription()
+
+    if desc.AnimationPack == 2623795 then
+        desc.AnimationPack = 0
+    else
+        desc.AnimationPack = 2623795
+    end
+
+    hum:ApplyDescription(desc)
+end)
+
+
+task.spawn(function()
+    while true do
+        task.wait(1)
+
+        local char = player.Character
+        if char then
+            local hum = char:FindFirstChild("Humanoid")
+            if hum then
+                local desc = hum:GetAppliedDescription()
+
+                if desc.AnimationPack == 2623795 then
+                    AdidasAnim_Button.Text = "Adidas Pack (ON)"
+                else
+                    AdidasAnim_Button.Text = "Adidas Pack (OFF)"
+                end
+            end
+        end
+    end
+end)
+
+
+
+
